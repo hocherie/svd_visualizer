@@ -12,7 +12,7 @@ class OpeningQuote(Scene):
             "is. You have to",
             "see it for yourself.",
         ])
-        words.scale_to_fit_width(FRAME_WIDTH - 2)
+        words.set_width(FRAME_WIDTH - 2)
         words.to_edge(UP)
         words.split()[1].set_color(GREEN)
         words.split()[3].set_color(BLUE)
@@ -20,7 +20,7 @@ class OpeningQuote(Scene):
         author.set_color(YELLOW)
         author.next_to(words, DOWN, buff = 0.5)
         comment = TextMobject("""
-            (Surprisingly apt words on the importance 
+            (Surprisingly apt words on the importance
             of understanding matrix operations visually.)
         """)
         comment.next_to(author, DOWN, buff = 1)
@@ -50,11 +50,11 @@ class Introduction(TeacherStudentsScene):
         everything = VMobject(*self.get_mobjects())
         def spread_out(p):
             p = p + 2*DOWN
-            return (FRAME_X_RADIUS+FRAME_Y_RADIUS)*p/np.linalg.norm(p)
+            return (FRAME_X_RADIUS+FRAME_Y_RADIUS)*p/get_norm(p)
         self.play(
             ApplyPointwiseFunction(spread_out, everything),
             ApplyFunction(
-                lambda m : m.center().to_edge(UP), 
+                lambda m : m.center().to_edge(UP),
                 linear_transformations
             )
         )
@@ -98,7 +98,7 @@ class DescribeTransformation(Scene):
         f_of_x = TexMobject("f(x)")
         L_of_v = TexMobject("L(\\vec{\\textbf{v}})")
         nums = [5, 2, -3]
-        num_inputs = VMobject(*map(TexMobject, map(str, nums)))
+        num_inputs = VMobject(*list(map(TexMobject, list(map(str, nums)))))
         num_outputs = VMobject(*[
             TexMobject(str(num**2))
             for num in nums
@@ -152,7 +152,7 @@ class WhyConfuseWithTerminology(TeacherStudentsScene):
     def construct(self):
         self.setup()
         self.student_says("Why confuse us with \\\\ redundant terminology?")
-        other_students = [self.get_students()[i] for i in 0, 2]
+        other_students = [self.get_students()[i] for i in (0, 2)]
         self.play(*[
             ApplyMethod(student.change_mode, "confused")
             for student in other_students
@@ -212,7 +212,7 @@ class ThinkinfOfFunctionsAsGraphs(VectorScene):
 
 class TransformJustOneVector(VectorScene):
     def construct(self):
-        self.lock_in_faded_grid()
+        # self.lock_in_faded_grid()
         v1_coords = [-3, 1]
         t_matrix = [[0, -1], [2, -1]]
         v1 = Vector(v1_coords)
@@ -230,7 +230,7 @@ class TransformJustOneVector(VectorScene):
         self.remove(v2)
         self.play(
             Transform(
-                v1.copy(), v2, 
+                v1.copy(), v2,
                 path_arc = -np.pi/2, run_time = 3
             ),
             ApplyMethod(v1.fade)
@@ -358,7 +358,7 @@ class ExponentialTransformation(ApplyComplexFunction):
 class CrazyTransformation(ApplyComplexFunction):
     CONFIG = {
         "function" : lambda z : np.sin(z)**2 + np.sinh(z)
-    }    
+    }
 
 class LookToWordLinear(Scene):
     def construct(self):
@@ -377,7 +377,7 @@ class LookToWordLinear(Scene):
         new_sub_word.next_to(linear_brace, DOWN)
 
         self.add(
-            faded_linear, transformation, 
+            faded_linear, transformation,
             transformation_brace, function
         )
         self.wait()
@@ -428,7 +428,7 @@ class ToThePedants(Scene):
         """
             Yeah yeah, I know that's not the formal definition
             for linear transformations, as seen in textbooks,
-            but I'm building visual intuition here, and what 
+            but I'm building visual intuition here, and what
             I've said is equivalent to the formal definition
             (which I'll get to later in the series).
         """])
@@ -535,7 +535,7 @@ class Rotation(SimpleLinearTransformationScene):
     }
     def construct(self):
         self.transposed_matrix = [
-            [np.cos(self.angle), np.sin(self.angle)], 
+            [np.cos(self.angle), np.sin(self.angle)],
             [-np.sin(self.angle), np.cos(self.angle)]
         ]
         SimpleLinearTransformationScene.construct(self)
@@ -550,7 +550,7 @@ class YetAnotherLinearTransformation(SimpleLinearTransformationScene):
     def construct(self):
         SimpleLinearTransformationScene.construct(self)
         words = TextMobject("""
-            How would you describe 
+            How would you describe
             one of these numerically?
             """
         )
@@ -582,19 +582,19 @@ class FollowIHatJHat(LinearTransformationScene):
         self.setup()
         i_hat = self.add_vector([1, 0], color = X_COLOR)
         i_label = self.label_vector(
-            i_hat, "\\hat{\\imath}", 
+            i_hat, "\\hat{\\imath}",
             color = X_COLOR,
             label_scale_factor = 1
         )
         j_hat = self.add_vector([0, 1], color = Y_COLOR)
         j_label = self.label_vector(
-            j_hat, "\\hat{\\jmath}", 
+            j_hat, "\\hat{\\jmath}",
             color = Y_COLOR,
             label_scale_factor = 1
         )
 
         self.wait()
-        self.play(*map(FadeOut, [i_label, j_label]))
+        self.play(*list(map(FadeOut, [i_label, j_label])))
         self.apply_transposed_matrix([[-1, 1], [-2, -1]])
         self.wait()
 
@@ -608,12 +608,12 @@ class TrackBasisVectorsExample(LinearTransformationScene):
             \\left[ \\begin{array}{c}
                 -1(1) + 2(3) \\\\
                 -1(-2) + 2(0)
-            \\end{arary}\\right] 
-            = 
+            \\end{arary}\\right]
+            =
             \\left[ \\begin{array}{c}
                 5 \\\\
                 2
-            \\end{arary}\\right] 
+            \\end{arary}\\right]
         """
     }
     def construct(self):
@@ -657,8 +657,8 @@ class TrackBasisVectorsExample(LinearTransformationScene):
             ])
         )
         self.play(Transform(
-            pre_def, v_def, 
-            run_time = 2, 
+            pre_def, v_def,
+            run_time = 2,
             submobject_mode = "all_at_once"
         ))
         self.remove(pre_def)
@@ -668,7 +668,7 @@ class TrackBasisVectorsExample(LinearTransformationScene):
         self.remove(coords)
 
     def show_linear_combination(self, clean_up = True):
-        i_hat_copy, j_hat_copy = [m.copy() for m in self.i_hat, self.j_hat]
+        i_hat_copy, j_hat_copy = [m.copy() for m in (self.i_hat, self.j_hat)]
         self.play(ApplyFunction(
             lambda m : m.scale(self.v_coords[0]).fade(0.3),
             i_hat_copy
@@ -771,10 +771,10 @@ class WatchManyVectorsMove(TransformManyVectors):
             for y in np.arange(-int(FRAME_Y_RADIUS)+0.5, int(FRAME_Y_RADIUS)+0.5)
         ])
         vectors.set_submobject_colors_by_gradient(PINK, YELLOW)
-        dots = self.vectors_to_dots(vectors)        
+        dots = self.vectors_to_dots(vectors)
         self.play(ShowCreation(dots, submobject_mode = "lagged_start"))
         self.play(Transform(
-            dots, vectors, 
+            dots, vectors,
             submobject_mode = "lagged_start",
             run_time = 2
         ))
@@ -836,7 +836,7 @@ class DeduceResultWithGeneralCoordinates(Scene):
         result = Matrix([row1, row2])
         result.show()
         vect_group = VMobject(
-            vect, rto, 
+            vect, rto,
             x.copy(), i_coords.copy(), plus,
             y.copy(), j_coords.copy(), equals,
             result
@@ -881,7 +881,7 @@ class MatrixVectorMultiplication(LinearTransformationScene):
             coords.rect = rect
 
         abstract_matrix = np.append(
-            i_coords.get_mob_matrix(), 
+            i_coords.get_mob_matrix(),
             j_coords.get_mob_matrix(),
             axis = 1
         )
@@ -951,14 +951,14 @@ class MatrixVectorMultiplication(LinearTransformationScene):
             ShowCreation(j_arrow)
         )
         self.wait()
-        self.play(*map(FadeOut, [
+        self.play(*list(map(FadeOut, [
             i_message, i_circle, i_arrow, j_message, j_circle, j_arrow
-        ]))
+        ])))
 
 
     def multiply_by_vector(self, matrix):
         vector = Matrix(["x", "y"]) if self.abstract else Matrix([5, 7])
-        vector.scale_to_fit_height(matrix.get_height())
+        vector.set_height(matrix.get_height())
         vector.next_to(matrix, buff = 2)
         brace = Brace(vector, DOWN)
         words = TextMobject("Any  ol' vector")
@@ -982,7 +982,7 @@ class MatrixVectorMultiplication(LinearTransformationScene):
         formula.arrange_submobjects(RIGHT, buff = 0.1)
         formula.center()
         formula_start = VMobject(
-            v1.copy(), 
+            v1.copy(),
             VMobject(*matrix.copy().get_mob_matrix()[:,0]),
             VectorizedPoint(),
             v2.copy(),
@@ -993,7 +993,7 @@ class MatrixVectorMultiplication(LinearTransformationScene):
             FadeOut(brace),
             FadeOut(words),
             Transform(
-                formula_start, formula, 
+                formula_start, formula,
                 run_time = 2,
                 submobject_mode = "all_at_once"
             )
@@ -1009,8 +1009,8 @@ class MatrixVectorMultiplication(LinearTransformationScene):
         else:
             row1 = ["3", "(5)", "+", "2", "(7)"]
             row2 = ["-2", "(5)", "+", "1", "(7)"]
-        row1 = VMobject(*map(TexMobject, row1))
-        row2 = VMobject(*map(TexMobject, row2))
+        row1 = VMobject(*list(map(TexMobject, row1)))
+        row2 = VMobject(*list(map(TexMobject, row2)))
         for row in row1, row2:
             row.arrange_submobjects(RIGHT, buff = 0.1)
         final_sum = Matrix([row1, row2])
@@ -1044,7 +1044,7 @@ class MatrixVectorMultiplication(LinearTransformationScene):
 
         self.play(
             Transform(
-                start_state, end_state, 
+                start_state, end_state,
                 submobject_mode = "all_at_once"
             ),
             Write(equals, run_time = 1)
@@ -1090,7 +1090,7 @@ class ColumnsToBasisVectors(LinearTransformationScene):
         if vector_coords is not None:
             vector = Matrix(vector_coords)
             VMobject(*vector.get_mob_matrix().flatten()).set_color(YELLOW)
-            vector.scale_to_fit_height(matrix_mob.get_height())
+            vector.set_height(matrix_mob.get_height())
             vector.next_to(matrix_mob, RIGHT)
             vector_background = BackgroundRectangle(vector)
             self.add_foreground_mobject(vector_background, vector)
@@ -1213,7 +1213,7 @@ class Describe90DegreeRotation(LinearTransformationScene):
             self.play(ShowCreation(background), Write(label))
             self.wait()
             self.play(
-                ShowCreation(background, rate_func = lambda t : smooth(1-t)),                
+                ShowCreation(background, rate_func = lambda t : smooth(1-t)),
                 ApplyMethod(coords.replace, col),
                 FadeOut(brackets),
             )
@@ -1225,7 +1225,7 @@ class Describe90DegreeRotation(LinearTransformationScene):
     def show_vector(self, matrix):
         vector = Matrix(["x", "y"])
         VMobject(*vector.get_mob_matrix().flatten()).set_color(YELLOW)
-        vector.scale_to_fit_height(matrix.get_height())
+        vector.set_height(matrix.get_height())
         vector.next_to(matrix, RIGHT)
         v_background = BackgroundRectangle(vector)
 
@@ -1273,40 +1273,40 @@ class NextVideo(Scene):
         title = TextMobject("Next video: Matrix multiplication as composition")
         title.to_edge(UP)
         rect = Rectangle(width = 16, height = 9, color = BLUE)
-        rect.scale_to_fit_height(6)
+        rect.set_height(6)
         rect.next_to(title, DOWN)
 
         self.add(title)
         self.play(ShowCreation(rect))
-        self.wait()         
+        self.wait()
 
 class FinalSlide(Scene):
     def construct(self):
         text = TextMobject("""
-            \\footnotesize 
-            Technically, the definition of ``linear'' is as follows: 
+            \\footnotesize
+            Technically, the definition of ``linear'' is as follows:
             A transformation L is linear if it satisfies these
             two properties:
 
             \\begin{align*}
-                L(\\vec{\\textbf{v}} + \\vec{\\textbf{w}}) 
+                L(\\vec{\\textbf{v}} + \\vec{\\textbf{w}})
                 &= L(\\vec{\\textbf{v}}) + L(\\vec{\\textbf{w}})
                 & & \\text{``Additivity''} \\\\
                 L(c\\vec{\\textbf{v}}) &= c L(\\vec{\\textbf{v}})
                 & & \\text{``Scaling''}
             \\end{align*}
 
-            I'll talk about these properties later on, but I'm a big 
-            believer in first understanding things visually.  
-            Once you do, it becomes much more intuitive why these 
-            two properties make sense.  So for now, you can 
-            feel fine thinking of linear transformations as those 
-            which keep grid lines parallel and evenly spaced 
-            (and which fix the origin in place), since this visual 
-            definition is actually equivalent to the two properties 
+            I'll talk about these properties later on, but I'm a big
+            believer in first understanding things visually.
+            Once you do, it becomes much more intuitive why these
+            two properties make sense.  So for now, you can
+            feel fine thinking of linear transformations as those
+            which keep grid lines parallel and evenly spaced
+            (and which fix the origin in place), since this visual
+            definition is actually equivalent to the two properties
             above.
         """, enforce_new_line_structure = False)
-        text.scale_to_fit_height(FRAME_HEIGHT - 2)
+        text.set_height(FRAME_HEIGHT - 2)
         text.to_edge(UP)
         self.add(text)
         self.wait()
@@ -1403,7 +1403,7 @@ class UsedToThinkinfOfFunctionsAsGraphs(VectorScene):
             return np.dot(p, [RIGHT, RIGHT, OUT]) + (FRAME_Y_RADIUS+1)*DOWN
         self.play(
             ApplyPointwiseFunction(
-                collapse_func, axes, 
+                collapse_func, axes,
                 submobject_mode = "all_at_once",
             ),
             ApplyPointwiseFunction(collapse_func, graph),
@@ -1417,8 +1417,8 @@ class UsedToThinkinfOfFunctionsAsGraphs(VectorScene):
         self.wait()
 
     def show_inputs_and_output(self):
-        numbers = range(-3, 4)
-        inputs = VMobject(*map(TexMobject, map(str, numbers)))
+        numbers = list(range(-3, 4))
+        inputs = VMobject(*list(map(TexMobject, list(map(str, numbers)))))
         inputs.arrange_submobjects(DOWN, buff = 0.5, aligned_edge = RIGHT)
         arrows = VMobject(*[
             Arrow(LEFT, RIGHT).next_to(mob)
@@ -1449,7 +1449,7 @@ class TryingToVisualizeFourDimensions(Scene):
                     x \\\\
                     y
                 \\end{array}
-            \\right]\\right) = 
+            \\right]\\right) =
             \\left[
                 \\begin{array}{c}
                     2x + y \\\\
@@ -1463,7 +1463,7 @@ class TryingToVisualizeFourDimensions(Scene):
         VMobject(*formula.split()[9:9+4]).set_color(MAROON_C)
         VMobject(*formula.split()[13:13+4]).set_color(BLUE)
         thought = TextMobject("""
-            Do I imagine plotting 
+            Do I imagine plotting
             $(x, y, 2x+y, x+2y)$???
         """)
         thought.split()[-17].set_color(X_COLOR)
@@ -1538,7 +1538,7 @@ class AdditivityProperty(LinearTransformationScene):
         added_anims = []
         if self.give_title:
             title = TextMobject("""
-                First fundamental property of 
+                First fundamental property of
                 linear transformations
             """)
             title.to_edge(UP)
@@ -1562,7 +1562,7 @@ class AdditivityProperty(LinearTransformationScene):
         self.play(ApplyMethod(new_w.shift, v.get_end()))
         sum_vect = self.add_vector(new_w.get_end(), color = PINK)
         sum_label = self.add_transformable_label(
-            sum_vect, 
+            sum_vect,
             "%s + %s"%(v_label.expression, w_label.expression),
             rotate = True
         )
@@ -1644,7 +1644,7 @@ class MoveAroundAllVectors(LinearTransformationScene):
             self.remove(vectors)
             self.add_vector(vector)
             self.play(*[
-                FadeOut(v) 
+                FadeOut(v)
                 for v in vectors.split()
                 if v is not vector
             ])
@@ -1713,7 +1713,7 @@ class ReasonForThinkingAboutArrows(LinearTransformationScene):
         self.add_vector(sum_vect)
         self.wait()
         self.play(Transform(
-            vectors, vectors_copy, 
+            vectors, vectors_copy,
             submobject_mode = "all_at_once"
         ))
         self.wait()
@@ -1725,29 +1725,6 @@ class LinearTransformationWithOneVector(LinearTransformationScene):
     def construct(self):
         self.setup()
         v = self.add_vector([3, 1])
-        self.vector_to_coords(v) 
+        self.vector_to_coords(v)
         self.apply_transposed_matrix([[-1, 1], [-2, -1]])
         self.vector_to_coords(v)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
